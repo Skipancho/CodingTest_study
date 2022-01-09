@@ -69,11 +69,10 @@ import java.util.*
 class Claw_crane {
     fun solution(board: Array<IntArray>, moves: IntArray): Int {
         var answer = 0
-        var dolls = board
-        var basket = Stack<Int>()
+        val basket = Stack<Int>()
 
         for (m in moves){
-            for (floor in dolls){
+            for (floor in board){
                 if (floor[m-1] != 0){
                     if (!basket.isEmpty() && basket.last() == floor[m-1]){
                         basket.pop()
