@@ -1,0 +1,20 @@
+package lv1
+
+class Text_to_num {
+    fun solution(s: String): Int {
+        var answer
+                = s.replace("zero","0")
+            .replace("one", "1")
+            .replace("two", "2")
+            .replace("three","3")
+            .replace("four","4")
+            .replace("five", "5")
+            .replace("six","6")
+            .replace("seven", "7")
+            .replace("eight","8")
+            .replace("nine","9")
+            .toInt()
+
+        return answer
+    }
+}
