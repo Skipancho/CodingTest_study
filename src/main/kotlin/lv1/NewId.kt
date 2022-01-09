@@ -1,6 +1,6 @@
 package lv1
 
-open class NewId {
+class NewId {
     fun solution(new_id: String): String {
         var text: String = new_id.toLowerCase()
             .replace("[^a-z0-9/./_/-]".toRegex(),"")
