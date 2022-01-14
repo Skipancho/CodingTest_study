@@ -75,12 +75,10 @@ python	backend	senior	chicken	50
 
 class Searching_rank {
 
-    private lateinit var infoMap : HashMap<String,ArrayList<Int>>
+    private val infoMap = HashMap<String,ArrayList<Int>>()
 
     fun solution(info: Array<String>, query: Array<String>): IntArray {
-        var answer: IntArray = intArrayOf()
-
-        infoMap = HashMap<String,ArrayList<Int>>()
+        val answer: IntArray = IntArray(query.size)
 
         for (information in info){
             dfs("",0,information.split(" ").toTypedArray())
@@ -90,9 +88,14 @@ class Searching_rank {
             infoMap[key]?.sort()
         }
 
-        for (q in query){
-            val searchQ = q.replace(" and ","").split(" ")
-            answer = answer.plus(search(searchQ[0],searchQ[1].toInt()))
+        for (idx in query.indices){
+            val searchQ = query[idx].replace(" and ","").split(" ")
+            if (!infoMap.containsKey(searchQ[0])){
+                answer[idx] = 0
+                continue
+            }else{
+                answer[idx] = search(searchQ[0]!!,searchQ[1].toInt())
+            }
         }
 
         return answer
@@ -114,9 +117,6 @@ class Searching_rank {
     }
 
     fun search(query : String, score : Int) : Int{
-        if (infoMap[query] == null){
-            return 0
-        }
         val scores = infoMap[query]!!
         var start = 0
         var end = scores.size - 1
