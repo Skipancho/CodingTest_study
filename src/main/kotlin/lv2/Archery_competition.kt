@@ -133,19 +133,20 @@ class Archery_competition {
     private lateinit var inform : IntArray
 
     fun solution(n: Int, info: IntArray): IntArray {
-        var answer: IntArray = intArrayOf()
         val map = HashMap<Int, IntArray>()
         inform = info
+
         listSet(IntArray(11),-1,n,0,0)
+
         val sortedset = set.toList().sortedWith(kotlin.Comparator{ o1, o2 ->
             var i = 10
             while (o1[i] == o2[i]&& i > 0) i--
             o1[i] - o2[i]
         })
+
         for (arr in sortedset) {
             var rian = 0
             var apeach = 0
-
             for (i in info.indices){
                 if (info[i] >= arr[i]){
                     if (info[i] != 0)
@@ -156,28 +157,17 @@ class Archery_competition {
             }
             map[rian-apeach] = arr
         }
-        map.forEach { (t, u) ->
-            print("$t : ")
-            u.forEach {
-                print("$it ")
-            }
-            println()
-        }
-        val key = map.keys.toList().maxOf { it }
-        answer = if (key > 0){
-            map[key]!!
-        }else{
-            answer.plus(-1)
-        }
 
-        return answer
+        val key = map.keys.maxOf { it }
+        //val key = map.keys.max()!!
+
+        return if (key > 0) map[key]!! else intArrayOf(-1)
+
     }
 
     fun listSet(array : IntArray, depth : Int, n : Int, cnt : Int ,pos : Int){
         if (depth == inform.size){
-            if (cnt < n){
-                array[10] = n-cnt
-            }
+            if (cnt < n) array[10] = n-cnt
             set.add(array)
             return
         }
@@ -187,16 +177,9 @@ class Archery_competition {
             c_array[depth] = pos
             count += pos
         }
-        if (count >= n){
-            listSet(c_array,depth+1,n,count,0)
-        }else{
-            if (depth < inform.size-1){
-                if (inform[depth+1] >= n-count)
-                    listSet(c_array,depth+1,n,count,0)
-                else
-                    listSet(c_array,depth+1,n,count,inform[depth+1]+1)
-            }
-            listSet(c_array,depth+1,n,count,0)
-        }
+        if (count < n && depth < inform.size-1 && inform[depth+1] < n-count)
+                listSet(c_array,depth+1,n,count,inform[depth+1]+1)
+
+        listSet(c_array,depth+1,n,count,0)
     }
 }
