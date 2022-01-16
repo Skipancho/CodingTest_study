@@ -138,9 +138,9 @@ class Archery_competition {
         inform = info
         listSet(IntArray(11),-1,n,0,0)
         val sortedset = set.toList().sortedWith(kotlin.Comparator{ o1, o2 ->
-            var i = 0
-            while (o1[i] == o2[i]&& i < 10) i++
-            o2[i] - o1[i]
+            var i = 10
+            while (o1[i] == o2[i]&& i > 0) i--
+            o1[i] - o2[i]
         })
         for (arr in sortedset) {
             var rian = 0
