@@ -68,7 +68,7 @@ class Parenthesis_change {
         else if(isGoodSeq(p)) p
         else conversion(p)
 
-    fun isBalanced(str : String) : Boolean{
+    private fun isBalanced(str : String) : Boolean{
         var sum = 0
         for (s in str){
             when(s){
@@ -79,7 +79,7 @@ class Parenthesis_change {
         return sum == 0
     }
 
-    fun isGoodSeq(str : String) : Boolean{
+    private fun isGoodSeq(str : String) : Boolean{
         var sum = 0
         for (s in str){
             when(s){
@@ -91,12 +91,11 @@ class Parenthesis_change {
         return sum == 0
     }
 
-    fun conversion(str : String) : String{
+    private fun conversion(str : String) : String{
         if (str == "") return ""
         if (isGoodSeq(str)) return str
         var firstSeq = ""
         var secondSeq = ""
-        var result = ""
         for (s in str.indices){
             firstSeq += str[s]
             if (isBalanced(firstSeq)){
@@ -105,6 +104,7 @@ class Parenthesis_change {
             }
         }
         secondSeq = conversion(secondSeq)
+        var result : String
         if (isGoodSeq(firstSeq)){
             result = "$firstSeq$secondSeq"
         }else{
