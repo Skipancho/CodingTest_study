@@ -1,4 +1,4 @@
-package lv2
+package lv2.distance_check
 /*
 문제 설명
 개발자를 희망하는 죠르디가 카카오에 면접을 보러 왔습니다.
