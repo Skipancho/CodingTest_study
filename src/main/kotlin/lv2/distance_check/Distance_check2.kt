@@ -21,7 +21,7 @@ class Distance_check2 {
         return answer
     }
 
-    fun checkPlace(place: Array<String>, i: Int, j: Int, skip: Int, depth: Int): Boolean {
+    private fun checkPlace(place: Array<String>, i: Int, j: Int, skip: Int, depth: Int): Boolean {
         //아래
         var result = true
         if (result && skip != 1 && i < place.lastIndex)
