@@ -1,82 +1,80 @@
 package lv3
+/*
+고고학자인 "튜브"는 고대 유적지에서 보물과 유적이 가득할 것으로 추정되는 비밀의 문을 발견하였습니다. 그런데 문을 열려고 살펴보니 특이한 형태의 자물쇠로 잠겨 있었고 문 앞에는 특이한 형태의 열쇠와 함께 자물쇠를 푸는 방법에 대해 다음과 같이 설명해 주는 종이가 발견되었습니다.
 
+잠겨있는 자물쇠는 격자 한 칸의 크기가 1 x 1인 N x N 크기의 정사각 격자 형태이고 특이한 모양의 열쇠는 M x M 크기인 정사각 격자 형태로 되어 있습니다.
+
+자물쇠에는 홈이 파여 있고 열쇠 또한 홈과 돌기 부분이 있습니다. 열쇠는 회전과 이동이 가능하며 열쇠의 돌기 부분을 자물쇠의 홈 부분에 딱 맞게 채우면 자물쇠가 열리게 되는 구조입니다. 자물쇠 영역을 벗어난 부분에 있는 열쇠의 홈과 돌기는 자물쇠를 여는 데 영향을 주지 않지만, 자물쇠 영역 내에서는 열쇠의 돌기 부분과 자물쇠의 홈 부분이 정확히 일치해야 하며 열쇠의 돌기와 자물쇠의 돌기가 만나서는 안됩니다. 또한 자물쇠의 모든 홈을 채워 비어있는 곳이 없어야 자물쇠를 열 수 있습니다.
+
+열쇠를 나타내는 2차원 배열 key와 자물쇠를 나타내는 2차원 배열 lock이 매개변수로 주어질 때, 열쇠로 자물쇠를 열수 있으면 true를, 열 수 없으면 false를 return 하도록 solution 함수를 완성해주세요.
+
+제한사항
+key는 M x M(3 ≤ M ≤ 20, M은 자연수)크기 2차원 배열입니다.
+lock은 N x N(3 ≤ N ≤ 20, N은 자연수)크기 2차원 배열입니다.
+M은 항상 N 이하입니다.
+key와 lock의 원소는 0 또는 1로 이루어져 있습니다.
+0은 홈 부분, 1은 돌기 부분을 나타냅니다.
+입출력 예
+key	lock	result
+[[0, 0, 0], [1, 0, 0], [0, 1, 1]]	[[1, 1, 1], [1, 1, 0], [1, 0, 1]]	true
+입출력 예에 대한 설명
+자물쇠.jpg
+
+key를 시계 방향으로 90도 회전하고, 오른쪽으로 한 칸, 아래로 한 칸 이동하면 lock의 홈 부분을 정확히 모두 채울 수 있습니다.
+ */
 class Lock_and_key {
-    var minX = 19
-    var maxX = 0
-    var minY = 19
-    var maxY = 0
 
     fun solution(key: Array<IntArray>, lock: Array<IntArray>): Boolean {
         val lockSize = lock.size
+        val keySize = key.size
         val keySum = key.fold(0){acc, ints -> acc + ints.sum()}
         val lockSum = lock.fold(0){acc, ints -> acc + ints.sum()}
         if (keySum+lockSum < lockSize*lockSize){
             return false
         }
         if (lockSum == lockSize*lockSize) return true
-
-        val keySize = key.size
+        val newLock = expandLock(lock)
         val keys = makeKeys(key)
-        val sublock = makeSubLock(lock)
-        val sublockSum = sublock.fold(0){acc, ints -> acc + ints.sum()}
-
-        sublock.forEach {
-            it.forEach { print("$it ") }
-            println()
-        }
-        println()
-
-        if (sublock.size > keySize || sublock[0].size > keySize) return false
-
-        for (k in keys){
-            println("key")
-            k.forEach {
-                it.forEach { print("$it ") }
-                println()
-            }
-            println()
-            for (i in 0..keySize-sublock.size){
-                for (j in 0..keySize-sublock[0].size){
+        val start = lockSize - keySize + 1
+        val end = lockSize*2 - 1
+        for (i in start..end){
+            for (j in start..end){
+                for (k in keys){
                     var isThisKey = true
-                    for (r in sublock.indices){
-                        for(c in sublock[r].indices){
-                            if (k[i+r][j+c] + sublock[r][c] != 1){
-                                isThisKey = false
-                                break
+                    var cnt = 0
+                    for (r in key.indices){
+                        for (c in key.indices){
+                            if (r+i >= lockSize && c+j >= lockSize && r+i < lockSize*2 && c+j <lockSize*2 ){
+                                if (newLock[r+i][c+j]+k[r][c] != 1){
+                                    isThisKey = false
+                                    break
+                                }else if (newLock[r+i][c+j] < k[r][c]){
+                                    cnt++
+                                }
                             }
                         }
                         if (!isThisKey) break
-                        else return true
                     }
+                    if (isThisKey&&cnt+lockSum==lockSize*lockSize) return true
                 }
             }
         }
         return false
     }
 
-    fun makeSubLock(lock : Array<IntArray>) : Array<IntArray>{
-        for (x in lock.indices){
-            for (y in lock[x].indices){
-                if (lock[x][y]==0){
-                    minX = minOf(minX,x)
-                    minY = minOf(minY,y)
-                    maxX = maxOf(maxX,x)
-                    maxY = maxOf(maxY,y)
-                }
+    private fun expandLock(lock : Array<IntArray>) : Array<IntArray>{
+        val size = lock.size
+        val temp = Array(size*3){IntArray(size*3){0} }
+
+        for (i in size until size*2){
+            for (j in size until size*2){
+                temp[i][j] = lock[i-size][j-size]
             }
-        }
-        var temp = arrayOf<IntArray>()
-        for (i in minX..maxX){
-            var intArray = intArrayOf()
-            for (j in minY..maxY){
-                intArray = intArray.plus(lock[i][j])
-            }
-            temp = temp.plus(intArray)
         }
         return temp
     }
 
-    fun rotateMatrix(key : Array<IntArray>) : Array<IntArray>{
+    private fun rotateMatrix(key : Array<IntArray>) : Array<IntArray>{
         val size = key.size
         val temp = Array(size){IntArray(size){0} }
         for (i in 0 until size) {
@@ -87,7 +85,7 @@ class Lock_and_key {
         return temp
     }
 
-    fun makeKeys(key: Array<IntArray>) : Array<Array<IntArray>>{
+    private fun makeKeys(key: Array<IntArray>) : Array<Array<IntArray>>{
         var array = arrayOf(key)
         var temp = key
         for (i in 0..3){
