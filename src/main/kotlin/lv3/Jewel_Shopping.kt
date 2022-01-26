@@ -4,26 +4,22 @@ class Jewel_Shopping {
     fun solution(gems: Array<String>): IntArray {
         val set = HashSet<String>()
         set.addAll(gems)
-        var size = set.size
-        var start = 0
-        var end = size - 1
-        while (size < gems.size){
-            val miniset = HashSet<String>()
-            for (i in start..end){
-                miniset.add(gems[i])
-            }
-            if (miniset == set){
-                return intArrayOf(start+1,end+1)
-            }
-            if (end==gems.size-1){
-                size++
-                start = 0
-                end = size -1
-            }else{
-                start++
-                end = start + size - 1
+        val size = set.size
+        val map = mutableMapOf<String,Int>()
+        var gemArray = arrayOf<IntArray>()
+        gems.mapIndexed { idx, gem ->
+            map.remove(gem)
+            map[gem] = idx
+            if (map.size == size){
+                gemArray = gemArray.plus(intArrayOf(map.values.iterator().next() + 1,idx + 1))
             }
         }
-        return intArrayOf(start+1, end+1)
+        gemArray.sortWith(Comparator { o1, o2 ->
+            if (o1[1]-o1[0] == o2[1]-o2[0]){
+                o1[1] - o2[1]
+            }
+            (o1[1]-o1[0])-(o2[1]-o2[0])
+        })
+        return gemArray[0]
     }
 }
