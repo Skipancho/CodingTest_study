@@ -1,4 +1,4 @@
-package lv3
+package lv3.gem_shopping
 /*
 [본 문제는 정확성과 효율성 테스트 각각 점수가 있는 문제입니다.]
 
