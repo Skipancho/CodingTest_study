@@ -2,89 +2,51 @@ package lv3.taxi_fare
 
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class Taxi_fare {
-    private lateinit var dist : Array<Int>
-    private val queue = PriorityQueue<Node>()
-    private val routeMap = HashMap<Int,Node>()
+
     private lateinit var route : Array<ArrayList<Node>>
     fun solution(n: Int, s: Int, a: Int, b: Int, fares: Array<IntArray>): Int {
-        var answer: Int = 0
-        val aRoute = Stack<Int>()
-        val bRoute = Stack<Int>()
-        dist = Array(n+1){ Int.MAX_VALUE}
-        route = Array(n+1){ArrayList()}
+        route = Array(n+1){ArrayList<Node>()}
         for (fare in fares){
-            route[fare[0]].add(Node(fare[1],fare[0],fare[2]))
-            route[fare[1]].add(Node(fare[0],fare[1],fare[2]))
+            route[fare[0]].add(Node(fare[1],fare[2]))
+            route[fare[1]].add(Node(fare[0],fare[2]))
         }
-
-        dijkstra(s)
-
-        var a_r = a
-        while (a_r != s){
-            val pref = routeMap[a_r]!!.pref
-            aRoute.push(pref)
-            a_r = pref
+        val list = ArrayList<Int>()
+        for ( c in 1..n){
+            val fare = if (c == s) dijkstra(n,s,a) + dijkstra(n,s,b)
+            else dijkstra(n,s,c)+dijkstra(n,c,a)+dijkstra(n,c,b)
+            list.add(fare)
         }
-        var b_r = b
-        while (b_r != s){
-            val pref = routeMap[b_r]!!.pref
-            bRoute.push(pref)
-            b_r = pref
-        }
-        answer = dist[a] + dist[b]
-
-        var lastSame = s
-        while (aRoute.isNotEmpty()&& bRoute.isNotEmpty()){
-            val c_a = aRoute.pop()
-            val c_b = bRoute.pop()
-            if (c_a==c_b) lastSame = c_a
-            else break
-        }
-
-        answer -= dist[lastSame]
-
-        return answer
+        return Collections.min(list)
     }
 
-    private fun dijkstra(start : Int){
+    fun dijkstra(n : Int, start : Int, end : Int) : Int{
+        val dist = IntArray(n+1){2000000}
+        val queue = PriorityQueue<Node>()
         dist[start] = 0
-        queue.add(Node(start,0,0))
-
+        queue.add(Node(start,0))
         while (queue.isNotEmpty()){
-            val no = queue.peek().no
-            val fare = queue.peek().fare
-            if (routeMap.containsKey(no)){
-                if (routeMap[no]!!.fare > fare){
-                    routeMap[no] = queue.poll()
-                }else{
-                    queue.poll()
-                }
-            }else{
-                routeMap[no] = queue.poll()
-            }
+            val cur_idx = queue.peek().idx
+            val cur_dist = queue.peek().dist
+            queue.poll()
+            if (dist[cur_idx] < cur_dist) continue
 
-            if (dist[no] < fare) continue
-
-            for (i in route[no].indices){
-                val nextNo = route[no][i].no
-                val nextFare = fare + route[no][i].fare
-
-                if (nextFare < dist[nextNo]){
-                    dist[nextNo] = nextFare
-                    queue.add(Node(nextNo,no,nextFare))
+            for (i in route[cur_idx]){
+                val next_dist = cur_dist + i.dist
+                if (next_dist < dist[i.idx]){
+                    dist[i.idx] = next_dist
+                    queue.add(Node(i.idx,next_dist))
                 }
             }
         }
+        return dist[end]
     }
 
     data class Node(
-        val no : Int,
-        var pref : Int,
-        var fare : Int
+        val idx : Int,
+        val dist : Int
     ) : Comparable<Node>{
-        override fun compareTo(other: Node) = fare - other.fare
+        override fun compareTo(other: Node) = dist - other.dist
     }
 }
