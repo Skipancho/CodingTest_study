@@ -5,8 +5,8 @@ import java.util.*
 class Dijkstra {
 
     fun dijkstra(n : Int, start : Int, end : Int, edges : Array<IntArray>) : Int{
-        val dist = IntArray(n+1){2000000}
-        val route = Array(n+1){ArrayList<Node>()}
+        val dist = IntArray(n){2000000}
+        val route = Array(n){ArrayList<Node>()}
         val queue = PriorityQueue<Node>()
 
         for (edge in edges){
