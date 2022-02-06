@@ -18,7 +18,7 @@ class Disappearing_floor_2 {
                 if (nx < 0 || nx >= board.size || ny < 0 || ny >= board[0].size || board[nx][ny]==0)
                     continue
                 board[p1_loc[0]][p1_loc[1]] = 0
-                var pair2 = dfs(board, p2, p2_loc, intArrayOf(nx,ny))
+                val pair2 = dfs(board, p2, p2_loc, intArrayOf(nx,ny))
                 board[p1_loc[0]][p1_loc[1]] = 1
                 if (pair2.first == Player.A){
                     if (pair.first == player) pair = Pair(p2,minOf(pair.second, pair2.second + 1))
