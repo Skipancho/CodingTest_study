@@ -30,10 +30,10 @@ class Carpet {
         return intArrayOf(width+2,height+2)
     }
 
-    fun solution2(brown: Int, red: Int) =
-        (1..red)
-            .filter { red % it == 0 }
-            .first { brown == (red / it * 2) + (it * 2) + 4 }
-            .let { intArrayOf(red / it + 2, it + 2) }
+    fun solution2(brown: Int, yellow: Int) =
+        (1..yellow)
+            .filter { yellow % it == 0 }
+            .first { brown == (yellow / it * 2) + (it * 2) + 4 }
+            .let { intArrayOf(yellow / it + 2, it + 2) }
 
 }
