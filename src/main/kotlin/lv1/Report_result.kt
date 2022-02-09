@@ -66,10 +66,10 @@ id_list	report	k	result
 
 class Report_result {
     fun solution(id_list: Array<String>, report: Array<String>, k: Int): IntArray {
-        var answer: IntArray = intArrayOf()
+        val answer = arrayListOf<Int>()
         val hashSet = HashSet<String>()
         val map = HashMap<String, ArrayList<String>>()
-        val reportMap = HashMap<String, Int>()
+        val mailMap = HashMap<String, Int>()
 
         for (re in report){
             hashSet.add(re)
@@ -91,27 +91,21 @@ class Report_result {
         }
 
         for (m in map){
-            val key = m.key
             val value = m.value
-
-            println("$key : ${value.size}")
-
             if (value.size >= k){
-                //val cnt = reportMap.getOrDefault(key,0)
-                //reportMap[key] = cnt + 1
                 for (v in value){
-                    val v_cnt = reportMap.getOrDefault(v,0)
-                    reportMap[v] = v_cnt + 1
+                    val v_cnt = mailMap.getOrDefault(v,0)
+                    mailMap[v] = v_cnt + 1
                 }
             }
         }
 
         for (id in id_list){
-            val cnt = reportMap.getOrDefault(id,0)
-            answer = answer.plus(cnt)
+            val cnt = mailMap.getOrDefault(id,0)
+            answer.add(cnt)
         }
 
-        return answer
+        return answer.toIntArray()
     }
 
     fun solution2 (id_list: Array<String>, report: Array<String>, k: Int): IntArray =

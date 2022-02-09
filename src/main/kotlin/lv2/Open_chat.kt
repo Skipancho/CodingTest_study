@@ -77,7 +77,7 @@ record	result
 
 class Open_chat {
     fun solution(record: Array<String>): Array<String> {
-        var answer = arrayOf<String>()
+        val answer = arrayListOf<String>()
         val user = HashMap<String,String>()
 
         for(re in record){
@@ -89,10 +89,10 @@ class Open_chat {
         for (re in record){
             val command = re.split(" ")
             when(command[0]){
-                "Enter" -> answer = answer.plus("${user[command[1]]}님이 들어왔습니다.")
-                "Leave" -> answer = answer.plus("${user[command[1]]}님이 나갔습니다.")
+                "Enter" -> answer.add("${user[command[1]]}님이 들어왔습니다.")
+                "Leave" -> answer.add("${user[command[1]]}님이 나갔습니다.")
             }
         }
-        return answer
+        return answer.toArray(arrayOf())
     }
 }
