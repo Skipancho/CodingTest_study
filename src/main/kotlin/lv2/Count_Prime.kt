@@ -1,4 +1,7 @@
 package lv2
+
+import java.math.BigInteger
+
 /*
 양의 정수 n이 주어집니다. 이 숫자를 k진수로 바꿨을 때, 변환된 수 안에 아래 조건에 맞는 소수(Prime number)가 몇 개인지 알아보려 합니다.
 
@@ -59,5 +62,15 @@ class Count_Prime {
             i++
         }
         return true
+    }
+
+    fun solution2(n: Int, k: Int): Int {
+        var answer =0
+        val newN = n.toString(k).split("0")
+        for(i in newN) {
+            if(i == "" || i == "0" || i == "1") continue
+            if(BigInteger(i).isProbablePrime(1)) answer ++
+        }
+        return answer
     }
 }
