@@ -47,20 +47,18 @@ gems	result
  */
 class Jewel_Shopping {
     fun solution(gems: Array<String>): IntArray {
-        val set = HashSet<String>()
-        set.addAll(gems)
-        val size = set.size
+        val size = gems.toHashSet().size
         val map = mutableMapOf<String,Int>() //보석 위치 저장
         val gemArrays = ArrayList<IntArray>()
         gems.mapIndexed { idx, gem ->
             map.remove(gem)
             map[gem] = idx
             if (map.size == size){ //모든 보석 위치가 확인 되면 해당 케이스 저장
-                gemArrays.add(intArrayOf(map.values.iterator().next() + 1,idx + 1))
+                gemArrays.add(intArrayOf(map.values.sorted().first() + 1,idx + 1))
             }
         }
         gemArrays.sortWith(Comparator { o1, o2 -> //간격이 작은 순으로 정렬
-            if (o1[1]-o1[0] == o2[1]-o2[0]){
+            if (o1[1]-o1[0] == o2[1]-o2[0]){ //간격이 같다면 시작점이 작은 순으로
                 o1[1] - o2[1]
             }
             (o1[1]-o1[0])-(o2[1]-o2[0])

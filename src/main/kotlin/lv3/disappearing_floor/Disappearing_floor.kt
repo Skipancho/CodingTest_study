@@ -111,8 +111,8 @@ class Disappearing_floor {
 
         newBoard[i][j] = 0
         var state : State
-        for (n in 0..3){
-            val movePoint = moveLocation(n,i,j,newBoard)
+        for (d in Direction.values()){
+            val movePoint = moveLocation(d,i,j,newBoard)
             if (movePoint[0]==-1) continue
             state = if (a_turn){
                 move(newBoard,movePoint,bloc,cnt + 1)
@@ -131,15 +131,19 @@ class Disappearing_floor {
         else State(max, !a_turn)
     }
 
-    private fun moveLocation(n : Int, i : Int , j : Int , board: Array<IntArray>) : IntArray =
-        if (n==0 && i > 0 && board[i-1][j] == 1) intArrayOf(i-1,j)
-        else if (n==1 && i < board.lastIndex && board[i+1][j] == 1) intArrayOf(i+1,j)
-        else if (n==2 && j > 0 && board[i][j-1] == 1) intArrayOf(i,j-1)
-        else if (n==3 && j < board[i].lastIndex && board[i][j+1] == 1) intArrayOf(i,j+1)
+    private fun moveLocation(d : Direction, i : Int , j : Int , board: Array<IntArray>) : IntArray =
+        if (d==Direction.UP && i > 0 && board[i-1][j] == 1) intArrayOf(i-1,j)
+        else if (d==Direction.DOWN && i < board.lastIndex && board[i+1][j] == 1) intArrayOf(i+1,j)
+        else if (d==Direction.LEFT && j > 0 && board[i][j-1] == 1) intArrayOf(i,j-1)
+        else if (d==Direction.RIGHT && j < board[i].lastIndex && board[i][j+1] == 1) intArrayOf(i,j+1)
         else intArrayOf(-1)
 
     data class State(
         val cnt : Int,
         val winA : Boolean
     )
+
+    enum class Direction{
+        UP, DOWN, LEFT, RIGHT
+    }
 }
