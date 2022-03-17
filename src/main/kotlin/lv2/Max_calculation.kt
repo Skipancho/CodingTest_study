@@ -53,33 +53,33 @@ expression	result
 = 300
 따라서, 우승 시 받을 수 있는 상금은 300 입니다.
  */
+
+import kotlin.math.abs
+
 class Max_calculation {
+
     fun solution(expression: String): Long {
-        val op = arrayOf("*+-","*-+","+*-","+-*","-*+","-+*")
-        var array = arrayOf<Long>()
-
-        for(i in 0 until 6){
-            val number = expression.split("+","-","*").toMutableList()
-            val ex = expression.split("\\d".toRegex()).filter{ it != ""}.toMutableList()
-
-            for(y in 0 until 3){
-                var x = 0
-                while(x < ex.size) {
-                    if (ex[x] == op[i][y].toString()) {
-                        when(ex[x]){
-                            "*" -> number[x] = (number[x].toLong() * number[x+1].toLong()).toString()
-
-                            "+" -> number[x] = (number[x].toLong() + number[x+1].toLong()).toString()
-
-                            "-" -> number[x] = (number[x].toLong() - number[x+1].toLong()).toString()
+        val prioritys = arrayOf("*+-","*-+","+*-","+-*","-*+","-+*")
+        var max = 0L
+        for (priority in prioritys){
+            val nums = expression.split("+","-","*").map { it.toLong() }.toMutableList()
+            val cal = expression.split("[0-9]".toRegex()).filter { it != "" }.toMutableList()
+            for (p in priority){
+                var i = 0
+                while (i < cal.size){
+                    if (cal[i] == "$p"){
+                        when(cal[i]){
+                            "+" -> nums[i] += nums[i+1]
+                            "-" -> nums[i] -= nums[i+1]
+                            "*" -> nums[i] *= nums[i+1]
                         }
-                        ex.removeAt(x)
-                        number.removeAt(x+1)
-                    } else x++
+                        nums.removeAt(i+1)
+                        cal.removeAt(i)
+                    }else i++
                 }
             }
-            array = array.plus(kotlin.math.abs(number[0].toLong()))
+            max = maxOf(max, abs(nums[0]))
         }
-        return array.maxOf { it }
+        return max
     }
 }
