@@ -1,4 +1,7 @@
 package lv3
+
+import java.util.*
+
 /*
 문제 설명
 n개의 노드가 있는 그래프가 있습니다. 각 노드는 1부터 n까지 번호가 적혀있습니다. 1번 노드에서 가장 멀리 떨어진 노드의 갯수를 구하려고 합니다. 가장 멀리 떨어진 노드란 최단경로로 이동했을 때 간선의 개수가 가장 많은 노드들을 의미합니다.
@@ -16,24 +19,30 @@ n	vertex	return
 예제의 그래프를 표현하면 아래 그림과 같고, 1번 노드에서 가장 멀리 떨어진 노드는 4,5,6번 노드입니다.
  */
 class FarthestNode {
-    fun solution(n: Int, edge: Array<IntArray>): Int {
-        val dist = Array(n){ IntArray(n){ 20000000 } }
-        for (e in edge) {
-            dist[e[0]-1][e[1]-1] = 1
-            dist[e[1]-1][e[0]-1] = 1
-        }
-        for (i in 0 until n) {
-            dist[i][i] = 0
-        }
 
-        for (i in 0 until n){
-            for (j in 0 until n){
-                for (k in 0 until n){
-                    if (dist[j][k] > dist[j][i] + dist[i][k])
-                        dist[j][k] = dist[j][i] + dist[i][k]
-                }
+    fun solution(n: Int, edge: Array<IntArray>): Int {
+        val edges = Array(n){ arrayListOf<Int>()}
+        val visited = Array(n){false}
+        var max = 0
+        for (e in edge){
+            edges[e[0]-1].add(e[1]-1)
+            edges[e[1]-1].add(e[0]-1)
+        }
+        val que : Queue<Int> = LinkedList()
+        val dist = IntArray(edges.size){0}
+        visited[0] = true
+        que.add(0)
+        while (que.isNotEmpty()){
+            val cur = que.poll()
+            for (i in edges.indices){
+                if (visited[i]||!edges[cur].contains(i))
+                    continue
+                visited[i] = true
+                dist[i] = dist[cur] + 1
+                if (dist[cur] == max) max++
+                que.add(i)
             }
         }
-        return dist[0].count { it == dist[0].maxOrNull()!! }
+        return dist.count { it == max }
     }
 }
