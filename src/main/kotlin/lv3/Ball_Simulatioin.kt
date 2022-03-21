@@ -28,30 +28,46 @@ n	m	x	y	queries	result
  */
 class Ball_Simulatioin {
     fun solution(n: Int, m: Int, x: Int, y: Int, queries: Array<IntArray>): Long {
-        var cntR = 0L
-        var cntC = 0L
-        for (c in 0 until m){
-            var moveC = c
-            for (q in queries){
-                when(q[0]){
-                    0 -> if (moveC-q[1] >= 0) moveC -= q[1] else moveC = 0
-                    1 -> if (moveC+q[1] <= m-1) moveC += q[1] else moveC = m-1
+        var startR = x.toLong()
+        var endR = x.toLong()
+        var startC = y.toLong()
+        var endC = y.toLong()
+        for (q in queries.reversed()){
+            when(q[0]){
+                0->{
+                    if (startC != 0L) startC += q[1]
+                    if (endC + q[1] < m-1)
+                        endC += q[1]
+                    else
+                        endC = m - 1L
+                }
+                1->{
+                    if (endC != m-1L) endC -= q[1]
+                    if (startC - q[1] > 0)
+                        startC -= q[1]
+                    else
+                        startC = 0
+                }
+                2->{
+                    if (startR != 0L) startR += q[1]
+                    if (endR + q[1] < n-1)
+                        endR += q[1]
+                    else
+                        endR = n - 1L
+                }
+                3->{
+                    if (endR != n-1L) endR -= q[1]
+                    if (startR - q[1] > 0)
+                        startR -= q[1]
+                    else
+                        startR = 0
                 }
             }
-            if (moveC == y) cntC++
+            if(startR > n - 1 || endR < 0 || startC > m - 1 || endC < 0)
+                return 0
         }
 
-        for (r in 0 until n){
-            var moveR = r
-            for (q in queries){
-                when(q[0]){
-                    2 -> if (moveR-q[1] >= 0) moveR -= q[1] else moveR = 0
-                    3 -> if (moveR+q[1] <= n-1) moveR += q[1] else moveR = n-1
-                }
-            }
-            if (moveR==x) cntR++
-        }
-
-        return cntR*cntC
+        return (endR - startR + 1L)*(endC - startC + 1L)
     }
+
 }
