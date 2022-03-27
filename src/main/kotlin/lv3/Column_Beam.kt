@@ -102,7 +102,7 @@ class Column_Beam {
     }
 
     private fun buildCheck(x : Int, y : Int, cb : Int) =
-        if (cb == COLUMN) y == 1 || columns[x][y-1] || beams[x-1][y]
+        if (cb == COLUMN) y == 1 || columns[x][y-1] || beams[x-1][y] || beams[x][y]
         else columns[x][y-1] || columns[x+1][y-1] || (beams[x-1][y] && beams[x+1][y])
 
     private fun deleteCheck(x : Int, y : Int, cb : Int){
