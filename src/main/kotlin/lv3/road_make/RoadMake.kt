@@ -1,5 +1,7 @@
 package lv3.road_make
 
+//https://programmers.co.kr/learn/courses/30/lessons/67259
+
 class RoadMake {
     private val dx = intArrayOf(1,0,-1,0)//오,밑,왼,위
     private val dy = intArrayOf(0,1,0,-1)
@@ -42,7 +44,6 @@ class RoadMake {
             else cost + 600
 
             if (dp[nx][ny][nd] > newCost){
-                println("$nx : $ny")
                 dp[nx][ny][nd] = newCost
                 move(nx,ny, newVisit, newCost, nd)
             }
