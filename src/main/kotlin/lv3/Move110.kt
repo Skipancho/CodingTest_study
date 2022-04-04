@@ -20,30 +20,45 @@ s	result
 ["1110","100111100","0111111010"]	["1101","100110110","0110110111"]
  */
 
+import java.util.*
+
 class Move110 {
     fun solution(s: Array<String>): Array<String> {
         val answer = Array(s.size){""}
         for(i in s.indices){
             val str = s[i]
-            var st = str.replace("110","")
-            var bf = str
+            val stack = Stack<Char>()
+            var cnt = 0
 
-            while (st != bf){
-                bf = st
-                st = st.replace("110","")
+            for (c in str){
+                stack.push(c)
+                if (stack.size >= 3){
+                    val check = CharArray(3){stack.pop()}
+                    if (check[0]=='0'&&check[1]=='1'&&check[2]=='1')
+                        cnt++
+                    else {
+                        stack.push(check[2])
+                        stack.push(check[1])
+                        stack.push(check[0])
+                    }
+                }
             }
-
-            val cnt = (str.length - st.length)/3
 
             if (cnt == 0){
                 answer[i] = str
                 continue
             }
-            var idx = st.length
-            while (idx > 0 && st[idx-1] == '1'){
+            val sb = StringBuilder()
+            var idx = stack.size
+
+            while (idx > 0 && stack.peek() == '1'){
+                sb.insert(0,stack.pop())
                 idx--
             }
-            val sb = StringBuilder(st)
+
+            while (stack.isNotEmpty())
+                sb.insert(0,stack.pop())
+
             sb.insert(idx,"110".repeat(cnt))
             answer[i]= sb.toString()
         }
