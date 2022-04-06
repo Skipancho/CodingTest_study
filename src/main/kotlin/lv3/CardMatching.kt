@@ -10,31 +10,35 @@ class CardMatching {
     private lateinit var board : Array<IntArray>
 
     fun solution(board: Array<IntArray>, r: Int, c: Int): Int {
-        var answer = 2000000
-        this.board = board
+        var answer = Int.MAX_VALUE
+        this.board = Array(4){IntArray(4){0} }
         val set = hashSetOf<Int>()
         for (i in board.indices){
             for (j in board.indices){
                 if (board[i][j] != 0){
-                    cards[board[i][j]].add(Pos(i,j,board[i][j]))
+                    cards[board[i][j]].add(Pos(i,j))
                     set.add(board[i][j])
                 }
             }
         }
+        if (set.isEmpty()) return 0
         val orders = permutation(set.toList())
+
         val start = Pos(r,c)
         for (order in orders){
-            answer = minOf(answer,move(start,order,0))
+            val cnt = move(start,order,0)
+            if (answer > cnt) answer = cnt
         }
-        return answer
+
+        return answer + set.size * 2
     }
 
     private fun move(start : Pos , order : List<Int> , n : Int) : Int{
         if (n == order.size) return 0
         var cnt = 0
         val i = order[n]
-        val a = bfs(start,cards[i][0]) + bfs(cards[i][0],cards[i][1])
-        val b = bfs(start,cards[i][0]) + bfs(cards[i][1],cards[i][0])
+        val a = bfs(start,cards[i][0]) + bfs(cards[i][0],cards[i][1])+2
+        val b = bfs(start,cards[i][0]) + bfs(cards[i][1],cards[i][0])+2
         for (c in cards[i]){
             board[c.r][c.c] = 0
         }
