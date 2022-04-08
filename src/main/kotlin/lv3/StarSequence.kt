@@ -40,7 +40,11 @@ class StarSequence {
     fun solution(a: IntArray): Int {
         if (a.size < 2) return 0
         var answer: Int = -1
+        val nums = IntArray(a.size){0}
+        for (i in a){ nums[i]++ }
         for (i in a.indices){
+            if (nums[i] == 0) continue
+            if (nums[i] <= answer) continue
             var cnt = 0
             var j = 0
             while (j < a.size-1){
