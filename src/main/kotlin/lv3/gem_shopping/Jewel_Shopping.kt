@@ -1,5 +1,7 @@
 package lv3.gem_shopping
 /*
+https://programmers.co.kr/learn/courses/30/lessons/67258
+
 [본 문제는 정확성과 효율성 테스트 각각 점수가 있는 문제입니다.]
 
 개발자 출신으로 세계 최고의 갑부가 된 어피치는 스트레스를 받을 때면 이를 풀기 위해 오프라인 매장에 쇼핑을 하러 가곤 합니다.
@@ -54,12 +56,12 @@ class Jewel_Shopping {
             map.remove(gem)
             map[gem] = idx
             if (map.size == size){ //모든 보석 위치가 확인 되면 해당 케이스 저장
-                gemArrays.add(intArrayOf(map.values.sorted().first() + 1,idx + 1))
+                gemArrays.add(intArrayOf(map.values.iterator().next() + 1,idx + 1))
             }
         }
         gemArrays.sortWith(Comparator { o1, o2 -> //간격이 작은 순으로 정렬
             if (o1[1]-o1[0] == o2[1]-o2[0]){ //간격이 같다면 시작점이 작은 순으로
-                o1[1] - o2[1]
+                o1[0] - o2[0]
             }
             (o1[1]-o1[0])-(o2[1]-o2[0])
         })
