@@ -39,15 +39,21 @@ k	room_number	result
 첫 번째 ~ 세 번째 고객까지는 원하는 방이 비어 있으므로 즉시 배정받을 수 있습니다. 네 번째 고객의 경우 1번 방을 배정받기를 원했는데, 1번 방은 빈 방이 아니므로, 1번 보다 번호가 크고 비어 있는 방 중에서 가장 번호가 작은 방을 배정해야 합니다. 1번 보다 번호가 크면서 비어있는 방은 [2번, 5번, 6번...] 방이며, 이중 가장 번호가 작은 방은 2번 방입니다. 따라서 네 번째 고객은 2번 방을 배정받습니다. 마찬가지로 5, 6번째 고객은 각각 5번, 6번 방을 배정받게 됩니다
  */
 class HotelRoom {
+    private val rooms = HashMap<Long,Long>()
     fun solution(k: Long, room_number: LongArray): LongArray {
         val answer = LongArray(room_number.size)
-        val rooms = HashSet<Long>()
         for (i in room_number.indices){
-            var roomNo = room_number[i]
-            while (rooms.contains(roomNo)){roomNo++}
-            rooms.add(roomNo)
-            answer[i] = roomNo
+            answer[i] = findRoom(room_number[i])
         }
         return answer
+    }
+    private fun findRoom(num : Long) : Long{
+        if (!rooms.contains(num)) {
+            rooms[num] = num + 1
+            return num
+        }
+        val next = findRoom(rooms[num]!!)
+        rooms[num] = next
+        return next
     }
 }
