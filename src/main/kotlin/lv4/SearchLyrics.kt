@@ -58,9 +58,7 @@ class SearchLyrics {
         val answer = IntArray(queries.size){0}
         val roots = mutableMapOf<Int,Trie>()
         val reverse = mutableMapOf<Int,Trie>()
-        val lenMap = IntArray(10001){0}
         for (word in words){
-            lenMap[word.length]++
             if (roots[word.length] == null)
                 roots[word.length] = Trie(0)
             roots[word.length]!!.insert(word)
@@ -72,7 +70,7 @@ class SearchLyrics {
         for (i in queries.indices){
             val len =queries[i].length
             val query = queries[i].replace("?","")
-            if (query.isEmpty()) answer[i] = lenMap[len]
+            if (query.isEmpty()) answer[i] = roots[len]?.cnt ?: 0
             else if (queries[i].endsWith("?"))
                 answer[i] = roots[len]?.getCount(query) ?: 0
             else
@@ -88,14 +86,15 @@ class SearchLyrics {
         fun insert(word : String){
             var child = this
             for(c in word){
+                child.cnt++
                 if(child.node.containsKey(c)){
                     child = child.node[c]!!
                 } else{
-                    child.node[c] = Trie(0, mutableMapOf())
+                    child.node[c] = Trie(0)
                     child = child.node[c]!!
                 }
-                child.cnt++
             }
+            child.cnt++
         }
         fun getCount(word: String) : Int {
             var child = this
